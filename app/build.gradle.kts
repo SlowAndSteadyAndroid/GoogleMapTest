@@ -58,5 +58,10 @@ dependencies {
     implementation("com.squareup.okhttp3:mockwebserver:4.11.0")
     implementation("com.opencsv:opencsv:5.7.1")
 
-
+    testImplementation("org.robolectric:robolectric:4.9.2")
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("androidx.test.ext:truth:1.5.0")
+    testImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+    testImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
+    testImplementation("com.github.cs124-illinois:gradlegrader:2023.7.1")
 }

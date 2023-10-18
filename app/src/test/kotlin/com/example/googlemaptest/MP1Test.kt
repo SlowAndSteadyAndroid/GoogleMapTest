@@ -7,6 +7,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.runner.AndroidJUnit4
 import com.example.googlemaptest.application.FavoritePlacesApplication
 import com.example.googlemaptest.models.Place
+import com.example.googlemaptest.models.search
 import com.example.googlemaptest.network.Client
 import com.example.googlemaptest.network.Server
 import com.fasterxml.jackson.databind.node.ArrayNode

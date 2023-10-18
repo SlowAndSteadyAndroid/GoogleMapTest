@@ -7,3 +7,7 @@ class Place(
     val longitude: Double,
     val description: String = ""
 )
+
+fun List<Place>.search(keyword : String) : List<Place> {
+    return this
+}

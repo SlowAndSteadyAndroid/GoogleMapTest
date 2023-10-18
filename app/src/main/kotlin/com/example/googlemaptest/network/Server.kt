@@ -56,7 +56,7 @@ private fun loadPlaces(): MutableList<Place> {
     // Load all CSV rows into a list and return
     val toReturn: MutableList<Place> = ArrayList()
     for (parts in csvReader) {
-        toReturn.add(Place(parts[0], parts[1], parts[2].toDouble(), parts[3].toDouble(), ""))
+        toReturn.add(Place(parts[0], parts[1], parts[2].toDouble(), parts[3].toDouble(), parts[4]))
     }
     return toReturn
 }

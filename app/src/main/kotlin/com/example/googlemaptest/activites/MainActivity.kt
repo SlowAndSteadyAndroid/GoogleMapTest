@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.googlemaptest.R
 import com.example.googlemaptest.models.Place
 import com.example.googlemaptest.models.ResultMightThrow
+import com.example.googlemaptest.models.search
 import com.example.googlemaptest.network.Client
 import org.osmdroid.tileprovider.tilesource.XYTileSource
 import org.osmdroid.util.GeoPoint
@@ -38,7 +39,8 @@ const val MAP_DEFAULT_ZOOM = 17.0
 
 class MainActivity :
     AppCompatActivity(),
-    Consumer<ResultMightThrow<List<Place>>> {
+    Consumer<ResultMightThrow<List<Place>>>,
+    androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
     // Reference to the MapView, initialized in onCreate, handy to have in other places
     // Marking the variable as lateinit allows us to not initialize it in the constructor but also have it be
@@ -46,12 +48,15 @@ class MainActivity :
     // If it is used before it is initialized with a non-null value, an exception will be thrown
     private lateinit var mapView: MapView
 
+    private lateinit var searchView: androidx.appcompat.widget.SearchView
+
     // List of all places retrieved from the server, initially set to an empty list to avoid nullability
     private var allPlaces = listOf<Place>()
 
     // ID of the currently open place, used to keep the same popup open when the list of places is updated
     // nullable because null indicates no currently open popup
     private var openPlace: String? = null
+
 
     /*
      * onCreate is the first method called when this activity is created.
@@ -67,6 +72,7 @@ class MainActivity :
         // Find the MapView component in the layout and configure it properly
         // Also save the reference for later use
         mapView = findViewById(R.id.map)
+        searchView = findViewById(R.id.search)
 
         // A OpenStreetMaps tile source provides the tiles that are used to render the map.
         // We use our own tile source with relatively-recent tiles for the Champaign-Urbana area, to avoid adding
@@ -94,6 +100,8 @@ class MainActivity :
 
         // Set the current map zoom level to the default
         mapView.controller.setZoom(MAP_DEFAULT_ZOOM)
+
+        searchView.setOnQueryTextListener(this)
     }
 
     /*
@@ -197,5 +205,18 @@ class MainActivity :
 
         // Force the MapView to redraw so that we see the updated list of markers
         mapView.invalidate()
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        updateShownPlaces(allPlaces.search(query.orEmpty()))
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        if (allPlaces.search(query.orEmpty()).isEmpty() || query.isNullOrEmpty())
+            updateShownPlaces(allPlaces)
+        else
+            updateShownPlaces(allPlaces.search(query))
+        return false
     }
 }

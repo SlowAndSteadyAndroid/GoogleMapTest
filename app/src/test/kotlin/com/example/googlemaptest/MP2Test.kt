@@ -1,6 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
-package edu.illinois.cs.cs124.ay2022.mp
+package com.example.googlemaptest
 
 import android.app.Activity
 import android.content.Intent
@@ -8,15 +8,15 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
+import com.example.googlemaptest.activites.AddPlaceActivity
+import com.example.googlemaptest.application.FavoritePlacesApplication
+import com.example.googlemaptest.models.Place
+import com.example.googlemaptest.models.ResultMightThrow
+import com.example.googlemaptest.network.Client
+import com.example.googlemaptest.network.Server
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.common.truth.Truth.assertWithMessage
-import edu.illinois.cs.cs124.ay2022.mp.activities.AddPlaceActivity
-import edu.illinois.cs.cs124.ay2022.mp.application.FavoritePlacesApplication
-import edu.illinois.cs.cs124.ay2022.mp.models.Place
-import edu.illinois.cs.cs124.ay2022.mp.models.ResultMightThrow
-import edu.illinois.cs.cs124.ay2022.mp.network.Client
-import edu.illinois.cs.cs124.ay2022.mp.network.Server
 import edu.illinois.cs.cs125.gradlegrader.annotations.Graded
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient

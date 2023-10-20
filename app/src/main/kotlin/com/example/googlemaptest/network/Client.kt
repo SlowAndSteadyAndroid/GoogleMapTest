@@ -91,6 +91,11 @@ object Client {
         requestQueue.add(getPlacesRequest)
     }
 
+    fun postFavoritePlace(place: Place, function: (ResultMightThrow<Boolean>) -> Boolean) {
+
+        function(ResultMightThrow(Exception("Not implemented")))
+    }
+
     /*
      * You do not need to modify the code below.
      * However, you may want to understand how it works.

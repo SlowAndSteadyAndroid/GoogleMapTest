@@ -1,10 +1,20 @@
 package com.example.googlemaptest.models
 
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 class Place(
+    @JsonProperty(value = "id", required = true)
     val id: String,
+    @JsonProperty(value = "name", required = true)
     val name: String,
+    @JsonProperty(value = "latitude", required = true)
     val latitude: Double,
-    val longitude: Double,
+    @JsonProperty(value = "longitude", required = true)
+    val longitude: Double
+    ,@JsonProperty(value = "description", required = true)
     val description: String = ""
 )
 

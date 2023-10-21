@@ -18,6 +18,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.example.googlemaptest.models.Place
 import com.example.googlemaptest.models.ResultMightThrow
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.apache.commons.lang3.NotImplementedException
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
@@ -30,6 +32,7 @@ private val TAG = Client::class.java.simpleName
 // We are using the Jackson JSON serialization library to deserialize data from the server
 private val objectMapper = jacksonObjectMapper().apply {
     configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true)
 }
 
 /*
@@ -91,9 +94,8 @@ object Client {
         requestQueue.add(getPlacesRequest)
     }
 
-    fun postFavoritePlace(place: Place, function: (ResultMightThrow<Boolean>) -> Boolean) {
-
-        function(ResultMightThrow(Exception("Not implemented")))
+    fun postFavoritePlace(place: Place, callback : Consumer<ResultMightThrow<Boolean>>) {
+        throw NotImplementedException()
     }
 
     /*

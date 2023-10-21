@@ -15,6 +15,7 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.StringReader
 import java.net.HttpURLConnection
+import java.util.UUID
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -35,6 +36,7 @@ import java.util.logging.Logger
 // We are using the Jackson JSON serialization library to serialize and deserialize data on the server
 private val objectMapper = jacksonObjectMapper().apply {
     configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true)
 }
 
 /*
@@ -81,6 +83,56 @@ object Server : Dispatcher() {
              */
             .setHeader("Content-Type", "application/json; charset=utf-8")
 
+
+    private fun postFavoritePlace(request: RecordedRequest): MockResponse {
+
+        try {
+            // Parse the JSON body of the request into a Place object
+            val place = objectMapper.readValue(request.body.readUtf8(), Place::class.java)
+            // Add the new place to the list of places
+
+            if(place.name.isNullOrEmpty() || place.description.isNullOrEmpty()){
+                return MockResponse()
+                    .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
+                    .setHeader("Content-Type", "application/json; charset=utf-8")
+            }
+
+            UUID.fromString(place.id)
+
+            if (place.latitude < -90 || place.latitude > 90 || place.longitude < -180 || place.longitude > 180)
+                return MockResponse()
+                    .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
+                    .setHeader("Content-Type", "application/json; charset=utf-8")
+
+            var count = 0
+
+            val newPlaces = mutableListOf<Place>()
+
+            for (p in places) {
+                if (p.id == place.id) {
+                    count++
+                    newPlaces.add(place)
+                } else {
+                    newPlaces.add(p)
+                }
+            }
+
+            if (count == 0)
+                newPlaces.add(place)
+
+            places = newPlaces
+
+            return MockResponse()
+                .setResponseCode(HttpURLConnection.HTTP_OK)
+                .setHeader("Content-Type", "application/json; charset=utf-8")
+
+        } catch (e: Exception) {
+            return MockResponse()
+                .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
+                .setHeader("Content-Type", "application/json; charset=utf-8")
+        }
+    }
+
     /*
      * Server request dispatcher.
      * Responsible for parsing the HTTP request and determining how to respond.
@@ -113,6 +165,8 @@ object Server : Dispatcher() {
                     places = loadPlaces()
                     MockResponse().setResponseCode(HttpURLConnection.HTTP_OK)
                 }
+
+                path == "/favoriteplace" && method == "POST" -> postFavoritePlace(request)
                 // Return the JSON list of restaurants for a GET request to the path /restaurants
                 path == "/places" && method == "GET" -> getPlaces()
                 // If the route didn't match above, then we return a 404 NOT FOUND
@@ -151,7 +205,8 @@ object Server : Dispatcher() {
     fun isRunning(wait: Boolean, retryCount: Int = 8, retryDelay: Long = 512): Boolean {
         for (i in 0 until retryCount) {
             val client = OkHttpClient()
-            val request: Request = Request.Builder().url(FavoritePlacesApplication.SERVER_URL).get().build()
+            val request: Request =
+                Request.Builder().url(FavoritePlacesApplication.SERVER_URL).get().build()
             try {
                 val response = client.newCall(request).execute()
                 check(response.isSuccessful)
@@ -173,7 +228,8 @@ object Server : Dispatcher() {
     }
 
     fun reset() {
-        val request = Request.Builder().url("${FavoritePlacesApplication.SERVER_URL}/reset/").get().build()
+        val request =
+            Request.Builder().url("${FavoritePlacesApplication.SERVER_URL}/reset/").get().build()
         val response = OkHttpClient().newCall(request).execute()
         check(response.isSuccessful)
     }

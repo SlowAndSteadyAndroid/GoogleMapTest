@@ -1,5 +1,6 @@
 package com.example.googlemaptest.activites
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -8,9 +9,11 @@ import com.example.googlemaptest.models.Place
 import com.example.googlemaptest.models.ResultMightThrow
 import com.example.googlemaptest.models.search
 import com.example.googlemaptest.network.Client
+import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.tileprovider.tilesource.XYTileSource
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import java.util.function.Consumer
 
@@ -40,7 +43,8 @@ const val MAP_DEFAULT_ZOOM = 17.0
 class MainActivity :
     AppCompatActivity(),
     Consumer<ResultMightThrow<List<Place>>>,
-    androidx.appcompat.widget.SearchView.OnQueryTextListener {
+    androidx.appcompat.widget.SearchView.OnQueryTextListener,
+    MapEventsReceiver {
 
     // Reference to the MapView, initialized in onCreate, handy to have in other places
     // Marking the variable as lateinit allows us to not initialize it in the constructor but also have it be
@@ -73,6 +77,8 @@ class MainActivity :
         // Also save the reference for later use
         mapView = findViewById(R.id.map)
         searchView = findViewById(R.id.search)
+
+
 
         // A OpenStreetMaps tile source provides the tiles that are used to render the map.
         // We use our own tile source with relatively-recent tiles for the Champaign-Urbana area, to avoid adding
@@ -203,6 +209,8 @@ class MainActivity :
         // This will clear openPlace if the marker that was previously shown is no longer open
         openPlace = newOpenPlace
 
+        mapView.overlays.add(MapEventsOverlay(this))
+
         // Force the MapView to redraw so that we see the updated list of markers
         mapView.invalidate()
     }
@@ -217,6 +225,24 @@ class MainActivity :
             updateShownPlaces(allPlaces)
         else
             updateShownPlaces(allPlaces.search(query))
+        return false
+    }
+
+    override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
+        val intent = Intent(this, AddPlaceActivity::class.java).apply {
+            putExtra("latitude", p?.latitude.toString())
+            putExtra("longitude", p?.longitude.toString())
+        }
+        startActivity(intent)
+        return false
+    }
+
+    override fun longPressHelper(p: GeoPoint?): Boolean {
+        val intent = Intent(this, AddPlaceActivity::class.java).apply {
+            putExtra("latitude", p?.latitude.toString())
+            putExtra("longitude", p?.longitude.toString())
+        }
+        startActivity(intent)
         return false
     }
 }

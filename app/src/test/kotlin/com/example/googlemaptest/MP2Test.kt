@@ -430,6 +430,7 @@ class MP2Test {
 
             val newPlace =
                 makePlaceFromJson(UUID.randomUUID().toString(), "namename", 88.8, -88.8, "descriptiondescription")
+
             clientPostPlace(newPlace, false)
 
             allPlaces = clientGetPlaces()

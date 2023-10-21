@@ -26,6 +26,6 @@ class FavoritePlacesApplication : Application() {
         const val SERVER_URL = "http://localhost:$DEFAULT_SERVER_PORT/"
 
         // Put your ID (from ID.txt) here
-        const val CLIENT_ID = ""
+        const val CLIENT_ID = "633a4214-fbe0-4620-9c4d-53e72109f5f5"
     }
 }

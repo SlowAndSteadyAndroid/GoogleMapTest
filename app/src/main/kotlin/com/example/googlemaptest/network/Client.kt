@@ -60,6 +60,8 @@ object Client {
          * The String will be valid JSON containing a list of place objects which we can deserialize into instances
          * of our Place model.
          */
+
+
         val getPlacesRequest = StringRequest(
             Request.Method.GET,
             "${FavoritePlacesApplication.SERVER_URL}/places/",
@@ -94,8 +96,33 @@ object Client {
         requestQueue.add(getPlacesRequest)
     }
 
-    fun postFavoritePlace(place: Place, callback : Consumer<ResultMightThrow<Boolean>>) {
-        throw NotImplementedException()
+    fun postFavoritePlace(place: Place, callback: Consumer<ResultMightThrow<Boolean>>) {
+
+
+        val postFavoritePlace = object : StringRequest(
+            Method.POST,
+            "${FavoritePlacesApplication.SERVER_URL}/favoriteplace/",
+            { response: String? ->
+                println(response)
+                callback.accept(ResultMightThrow(true))
+            },
+            { error: VolleyError? ->
+                // This code runs on failure
+                // Pass the Exception to the callback on error
+                callback.accept(ResultMightThrow(error))
+            }
+        ) {
+            @Throws(com.android.volley.AuthFailureError::class)
+            override fun getBody(): ByteArray =
+                objectMapper.writeValueAsBytes(place)
+
+            override fun getBodyContentType(): String {
+                return "application/json; charset=utf-8"
+            }
+        }
+        // Actually queue the request
+        // The callbacks above will be run once it completes
+        requestQueue.add(postFavoritePlace)
     }
 
     /*

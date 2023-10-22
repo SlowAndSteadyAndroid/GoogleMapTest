@@ -3,5 +3,6 @@
     <style name="Base.Theme.GoogleMapTest" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="S">@android:color/transparent</item>
     </style>
 </resources>

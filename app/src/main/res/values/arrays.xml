@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="array_home">
+        <item>search</item>
+        <item>bookmark</item>
+    </array>
+
+    <integer-array name="array_home_icon">
+        <item>@drawable/ic_search</item>
+        <item>@drawable/ic_bookmark</item>
+    </integer-array>
+</resources>

@@ -3,7 +3,15 @@
     <style name="Base.Theme.GoogleMapTest" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="S">@android:color/transparent</item>
     </style>
 
     <style name="Theme.GoogleMapTest" parent="Base.Theme.GoogleMapTest" />
+
+
+    <style name="tab_text" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+
 </resources>

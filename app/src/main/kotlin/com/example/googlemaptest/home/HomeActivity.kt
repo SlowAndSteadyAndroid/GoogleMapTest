@@ -2,6 +2,7 @@ package com.example.googlemaptest.home
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import com.example.googlemaptest.R
 import com.example.googlemaptest.adapter.FragmentPagerAdapter
 import com.example.googlemaptest.search.SearchFragment
@@ -14,6 +15,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
 
+    private val viewModel by viewModels<HomeViewModel>()
+
     private var backWait: Long = INIT_TIME
 
     private val tabConfigurationStrategy =
@@ -25,6 +28,21 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initUi()
+        initViewModel()
+    }
+
+    private fun initViewModel() {
+        viewModel.viewStateLiveData.observe(this) { viewState ->
+            (viewState as? HomeViewState)?.let { onChangedHomeViewState(viewState) }
+        }
+    }
+
+    private fun onChangedHomeViewState(viewState: HomeViewState) {
+        when(viewState){
+            is HomeViewState.Route -> {
+                binding.viewpager.currentItem = 0
+            }
+        }
     }
 
     private fun initUi() {
